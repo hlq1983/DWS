@@ -1,0 +1,20 @@
+Package: DWS
+Type: Package
+Title: DWS (Directional Wave Simulation)
+Version: 0.1.0
+Author: Liqing Huang <hlq1983@tamu.edu>
+Maintainer: Liqing Huang <hlq1983@tamu.edu>
+Description: DWS (Directional Wave Simulation) numerically simulates the time series of the irregular wave at different locations in the ocean based upon a directional wave energy spectrum. Based upon the input of a 2 dimensional table with spectral variance versus frequencies and directions and linear wave theory, DWS calculates the time histories of the surface elevation, the horizontal velocity, the vertical velocity, and the dynamic pressure at different locations (x, y, z) at a time series t.
+    In calculating the irregular waves, two different models for the wave directionality could be chosen to combine a variety of harmonic wave components, one is Single Summation Model (SSM) and the other is Double Summation Model (DSM). For SSM, wave components of different frequencies travel at different dictions, but at the same frequency, they travel at the same direction. For DSM, at the same frequency, wave components travel at different directions (energy spreading).
+    In obtaining the harmonic wave components, the Linear Wave Theory is employed to calculating the properties of the regular waves. As we know, the linear wave theory can only be applied up to the still water level. However, for structures at the free surface, the waves above the Still Water Level (SWL) may have a large influence on the response of the structure and may not be ignored. If linear theory is used, the theory is modified to account for the Free Surface Effect. There are several possible modifications that have been proposed, such as First-Order Stretching, Linear Extrapolation and Second-Order Stretching. Wheeler’s stretching (1970) is the most commonly used First-Order Stretching technique in the offshore structure design. Thus, only Linear Wave Theory without stretching and Wheeler’s stretching is provided in the Program.
+Imports:
+    foreach,
+    doParallel
+Sugests:
+    devtools,
+    roxygen2,
+    testthat
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
