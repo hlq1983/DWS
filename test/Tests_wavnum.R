@@ -1,5 +1,5 @@
 # This is a script to save verification tests for function wavnum in the DWS R package
-source("R/DWS.R")
+source("R/wavnum.R")
 
 
 
