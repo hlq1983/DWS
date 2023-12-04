@@ -12,6 +12,7 @@ Imports:
     doParallel
 Sugests:
     devtools,
+    usethis,
     roxygen2,
     testthat
 License: GPL (>= 3)
