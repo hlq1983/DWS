@@ -35,7 +35,7 @@
 #' @examples DWS(h = 100.0, xyz = t(cbind(c(0.0, 0.0, -5.0), c(1.0, 1.0, -5.0))), t = seq(from = 0.0, to = 10, by = 1), n = 2, m = 1, freq = c(0.1, 0.3), kata = 45, spevar = matrix(c(4.5, 0.5), 1, 2), dfreq = 1, dkata = 1)
 #' @examples DWS(h = 100.0, xyz = t(cbind(c(0.0, 0.0, -5.0), c(1.0, 1.0, -5.0))), t = seq(from = 0.0, to = 10, by = 1), n = 1, m = 2, freq = 0.1, kata = c(0, 45), spevar = matrix(c(0.5, 4.5), 2, 1), dfreq = 1, dkata = 1)
 #' @examples DWS(h = 100.0, xyz = t(cbind(c(0.0, 0.0, -5.0), c(1.0, 1.0, -5.0))), t = seq(from = 0.0, to = 10, by = 1), n = 2, m = 2, freq = c(0.1, 0.3), kata = c(0, 45), spevar = matrix(c(0.0, 4.5, 0.5, 0.5), 2, 2), dfreq = c(rep(1, 2)), dkata = c(rep(1, 2)))
-#' @examples DWS(h = 100.0, xyz = t(cbind(c(0.0, 0.0, -5.0), c(1.0, 1.0, -5.0))), t = seq(from = 0.0, to = 10, by = 1), n = 2, m = 2, freq = c(0.1, 0.3), kata = c(0, 45), spevar = matrix(c(0.0, 4.5, 0.5, 0.5), 2, 2), dfreq = c(rep(1, 2)), dkata = c(rep(1, 2)), iunit = 1, itheory = 2, imodel = 2, ialgorithm = 2, iseed = 150001, tol = 1.0e-5, no = 200)
+#' @examples DWS(h = 100.0, xyz = t(cbind(c(0.0, 0.0, -5.0), c(1.0, 1.0, -5.0))), t = seq(from = 0.0, to = 10, by = 1), n = 2, m = 2, freq = c(0.1, 0.3), kata = c(0, 45), spevar = matrix(c(0.0, 4.5, 0.5, 0.5), 2, 2), dfreq = c(rep(1, 2)), dkata = c(rep(1, 2)), iunit = 1, itheory = 2, imodel = 2, ialgorithm = 1, iseed = 150001, tol = 1.0e-5, no = 200)
 #'
 DWS <- function(h, xyz, t, n, m, freq, kata, spevar, dfreq = NULL, dkata = NULL, iunit = 1, imodel = 1, itheory = 1, ialgorithm = 1, iseed = 150001, tol = 1.0e-5, no = 200) {
 
