@@ -1,18 +1,18 @@
 # DWS: IRREGULAR OCEAN WAVES SIMULATIONS USING A DIRECTIONAL WAVE ENERGY SPECTRUM
-'DWS (Directional Wave Simulation)' is an 'R' package for numerical simulations of the irregular ocean waves at different locations using 
+`DWS (Directional Wave Simulation)` is an `R` package for numerical simulations of the irregular ocean waves at different locations using 
 a directional wave energy spectrum. That is, based upon a 2-dimensional table with spectral variance versus frequencies and direction angles, 
 we want to calculate the time series of the surface elevation, the horizontal velocity, the vertical velocity, the horizontal acceleration, 
 the vertical acceleration, and the dynamic pressure at different locations (x-, y-, z- coordinates).
 
-In obtaining the harmonic wave components, the Linear Wave Theory (LWT) is employed to calculate the properties of the regular waves. As we know, 
+In obtaining the harmonic wave components, the `Linear Wave Theory (LWT)` is employed to calculate the properties of the regular waves. As we know, 
 the linear wave theory can only be applied up to the Still Water Level (SWL). However, for structures at the free surface, the waves above the SWL 
 may have a large influence on the response of the structure and may not be ignored. If linear theory is used, the theory is modified to account for 
-the Free Surface Effect. There are several possible modifications that have been proposed, such as First-Order Stretching, Linear Extrapolation and 
-so on. Wheeler’s Stretching (1970) is the most used First-Order Stretching technique in the offshore structure design.
+the Free Surface Effect. There are several possible modifications that have been proposed, such as `First-Order Stretching`, `Linear Extrapolation`, and 
+so on. `Wheeler’s Stretching` (1970) is the most used First-Order Stretching technique in the offshore structure design.
 
-In calculating the irregular waves, two different models for the wave directionality could be chosen to combine a variety of harmonic wave components, 
-one is Single Summation Model (SSM) and the other is Double Summation Model (DSM). For SSM, wave components of different frequencies travel at different 
-dictions, but at the same frequency, they travel in the same direction. For DSM, at the same frequency, wave components travel in different directions 
+In calculating the irregular waves, two different models for the wave direction summation could be chosen to combine a variety of harmonic wave components, 
+one is `Single Summation Model (SSM)` and the other is `Double Summation Model (DSM)`. For SSM, wave components of different frequencies travel at different 
+directions, but at the same frequency, they travel in the same direction. For DSM, at the same frequency, wave components travel in different directions 
 (energy spreading).
 
 
@@ -22,7 +22,7 @@ dictions, but at the same frequency, they travel in the same direction. For DSM,
 
 
 ## Installation
-The R package 'DWS' has been developed for the purpose of irregular ocean wave simulations using a direction wave energy spectrum, and the most recent
+The `R` package `DWS` has been developed for the purpose of irregular ocean wave simulations using a direction wave energy spectrum, and the most recent
 Github version can be installed using the commands as follows:
 
 ```r
@@ -31,7 +31,7 @@ install.packages("devtools")
 library(devtools)
 
 # The repository is private, you can download the R packge using the token valid until 1/4/2024
-devtools::install_github("https://github.com/hlq1983/DWS", build_vignettes = TRUE, auth_token = "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") 
+devtools::install_github("https://github.com/hlq1983/DWS", auth_token = "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") 
 ```
 
 ## Example

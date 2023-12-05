@@ -198,10 +198,10 @@ iseed <- 150001
 
 
 # Benchmarking the parallel simulations for small workloads
-# microbenchmark(
-#   DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1.0e-5, no = 200),
-#   times = 5
-# )
+microbenchmark(
+  DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1.0e-5, no = 200),
+  times = 5
+)
 
 # Unit: seconds
 #                                                                                                                                 expr      min       lq     mean   median       uq      max   neval
@@ -230,10 +230,10 @@ ialgorithm <- 1
 iseed <- 150001
 
 # Load Case 2 Simulation
-# LC3 <- DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = 150001, tol = 1.0e-5, no = 200)
+LC3 <- DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = 150001, tol = 1.0e-5, no = 200)
 
 # Plot time series of wave properties in SI unit
-# wavtsplot(LC3, iunit = 1)
+wavtsplot(LC3, iunit = 1)
 
 #   +-----------------------------+
 #   | DIRECTIONAL WAVE SIMULATION |
@@ -277,10 +277,10 @@ iseed <- 150001
 
 
 # Benchmarking the sequential simulations for large workloads
-# microbenchmark(
-#   DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1.0e-5, no = 200),
-#   times = 5
-# )
+microbenchmark(
+  DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1.0e-5, no = 200),
+  times = 5
+)
 
 
 
@@ -290,10 +290,10 @@ iseed <- 150001
 ialgorithm <- 2
 
 # Load Case 3 Simulation
-# LC4 <- DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = 150001, tol = 1.0e-5, no = 200)
+LC4 <- DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = 150001, tol = 1.0e-5, no = 200)
 
 # Plot time series of wave properties in SI unit
-# wavtsplot(LC4, iunit = 1)
+wavtsplot(LC4, iunit = 1)
 
 #   +-----------------------------+
 #   | DIRECTIONAL WAVE SIMULATION |
@@ -340,9 +340,9 @@ ialgorithm <- 2
 
 
 # Benchmarking the parallel simulations for large workloads
-# microbenchmark(
-#   DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1.0e-5, no = 200),
-#   times = 5
-# )
+microbenchmark(
+  DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1.0e-5, no = 200),
+  times = 5
+)
 
 
