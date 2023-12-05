@@ -14,7 +14,7 @@
 #' @param m Total number of wave directions.
 #' @param freq Wave frequency vector [n], Hz.
 #' @param kata Wave direction vector [m], degree.
-#' @param spevar Directional wave spectral variance matrix [m x n].
+#' @param spevar Directional wave spectral variance matrix [m x n], m^2/Hz/deg or ft^2/Hz/deg.
 #' @param dfreq (Optional, default NULL) If NULL, wave frequency band width vector dfreq shall be calculated based on the provided wave frequency vector freq; if provided, the length of dfreq shall be 1 or n. For n = 1, dfreq must be given.
 #' @param dkata (Optional, default NULL) If NULL, wave direction band width vector dkata shall be calculated based on the provided wave direction vector kata; if provided, the length of dkata shall be 1 or m. For m = 1, dkata must be given.
 #' @param iunit (Optional, default iunit = 1) Choose unit system: 1 for SI unit system, 2 for English Unit.
