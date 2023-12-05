@@ -150,11 +150,11 @@ ialgorithm <- 2
 # Large odd integer is chosen for obtaining random initial wave phases
 iseed <- 150001
 
-# Load Case 3 Simulation
-# LC2 <- DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = 150001, tol = 1.0e-5, no = 200)
+# Load Case 2 Simulation
+LC2 <- DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = 150001, tol = 1.0e-5, no = 200)
 
 # Plot time series of wave properties in SI unit
-# wavtsplot(LC2, iunit = 1)
+wavtsplot(LC2, iunit = 1)
 ```
 
 Benchmarking the parallel simulations for small workload with 5 random seeds:
@@ -199,11 +199,11 @@ ialgorithm <- 1
 # Large odd integer is chosen for obtaining random initial wave phases
 iseed <- 150001
 
-# Load Case 2 Simulation
-# LC3 <- DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = 150001, tol = 1.0e-5, no = 200)
+# Load Case 3 Simulation
+LC3 <- DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = 150001, tol = 1.0e-5, no = 200)
 
 # Plot time series of wave properties in SI unit
-# wavtsplot(LC3, iunit = 1)
+wavtsplot(LC3, iunit = 1)
 ```
 
 Benchmarking the sequential simulations for large workload with 5 random seeds:
@@ -214,6 +214,12 @@ microbenchmark(
   DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1.0e-5, no = 200),
   times = 5
 )
+
+# Unit: seconds
+#                                                                                                                                 expr      min       lq     mean   median       uq      max neval
+# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200) 6577.701 6600.282 6636.202 6612.139 6631.342 6759.545     5
+#
+# The median run time is: 6612.139 seconds
 ```
 
 Step 7: Parallel simulations for large workloads:
@@ -223,8 +229,10 @@ Step 7: Parallel simulations for large workloads:
 # Load Case 4: Set 11 locations xyz of interest for parallel simulation
 # Parallel simulation is preferred for large workloads
 ialgorithm <- 2
+# Large odd integer is chosen for obtaining random initial wave phases
+iseed <- 150001
 
-# Load Case 3 Simulation
+# Load Case 4 Simulation
 LC4 <- DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = 150001, tol = 1.0e-5, no = 200)
 
 # Plot time series of wave properties in SI unit
@@ -239,6 +247,12 @@ microbenchmark(
   DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1.0e-5, no = 200),
   times = 5
 )
+
+# Unit: seconds
+#                                                                                                                                 expr      min       lq     mean   median       uq      max neval
+# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200) 471.8445 476.9018 479.5849 478.8434 480.3728 489.9622     5
+#
+# The median run time is: 478.8434 seconds
 ```
 
 <img src="example/Tsplot_LC3&4.jpeg" width="100%" />
