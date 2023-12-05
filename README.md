@@ -15,6 +15,12 @@ one is Single Summation Model (SSM) and the other is Double Summation Model (DSM
 dictions, but at the same frequency, they travel in the same direction. For DSM, at the same frequency, wave components travel in different directions 
 (energy spreading).
 
+
+
+<img src="example\KatrinaWaveSpectrum.jpg" width="100%" />
+
+
+
 ## Installation
 The R package 'DWS' has been developed for the purpose of irregular ocean wave simulations using a direction wave energy spectrum, and the most recent
 Github version can be installed using the commands as follows:
@@ -243,6 +249,3 @@ Therefore, the parallel algorithm is preferred for large workloads.
 ## Acknowledgements
 We thank Dr. J. Zhang (Professor Emeritus, Department of Ocean Engineering, Texas A&M Univeristy) for his direct academic guidance to develope this numerical tool, 
 and thank Dr. H.C. Chen (Professor, Department of Ocean Engineering, Texas A&M Univeristy)for providing the research project with the Hurricane Katrina Spectrum data.
-
-<pdf src="KatrinaWaveSpectrum.pdf" width="100%" />
-
