@@ -11,6 +11,7 @@ library(doParallel)
 library(devtools)
 library(usethis)
 library(microbenchmark)
+library(DWS)
 
 
 
@@ -126,10 +127,10 @@ wavtsplot(LC1, iunit = 1)
 
 
 # Benchmarking the sequential simulations for small workloads
-# microbenchmark(
-#   DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1.0e-5, no = 200),
-#   times = 5
-# )
+microbenchmark(
+  DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1.0e-5, no = 200),
+  times = 5
+)
 
 # Unit: milliseconds
 #                                                                                                                                 expr      min       lq     mean   median       uq      max   neval
