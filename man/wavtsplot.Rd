@@ -18,7 +18,7 @@ A plotting window with 3 X 3 matrix for time series plots of wave properties.
 Plot time series of wave properties in a plotting window with 3 X 3 matrix based on a output list from DWS function.
 }
 \examples{
-wavtsplot(LC)
-wavtsplot(LC, iunit = 1)
+wavtsplot(LC1)
+wavtsplot(LC = LC1, iunit = 1)
 
 }

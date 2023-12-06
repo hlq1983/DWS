@@ -60,7 +60,7 @@ DWS(
 \item{no}{(Optional, default no = 200) Maximum number of iteration for Newton-Raphson Method.}
 }
 \value{
-A time series of total irregular wave potential, total irregular wave horizontal X-velocity, total irregular wave horizontal Y-velocity, total irregular wave horizontal Z-velocity, total irregular wave horizontal X-acceleration, total irregular wave horizontal Y-acceleration, total irregular wave vertical Z-acceleration, and total irregular wave dynamic pressure at different locations (x, y, z) listed in xyz matrix.
+A list containing locations, time series, and output from wavsimu containing time series of total irregular wave potential, total irregular wave horizontal X-velocity, total irregular wave horizontal Y-velocity, total irregular wave horizontal Z-velocity, total irregular wave horizontal X-acceleration, total irregular wave horizontal Y-acceleration, total irregular wave vertical Z-acceleration, and total irregular wave dynamic pressure at different locations (x, y, z) listed in xyz matrix.
 }
 \description{
 DWS (Directional Wave Simulation) numerically simulates the time series of
