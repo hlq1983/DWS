@@ -31,7 +31,7 @@ install.packages("devtools")
 library(devtools)
 
 # The repository is private, you can download the R packge using the token valid until 1/4/2024
-devtools::install_github("https://github.com/hlq1983/DWS", auth_token = "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") 
+devtools::install_github("https://github.com/hlq1983/DWS/tree/master", auth_token = "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") 
 ```
 
 ## Example
