@@ -83,7 +83,7 @@ iseed <- 150001
 LC1 <- DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = 150001, tol = 1.0e-5, no = 200)
 
 # Plot time series of wave properties in SI unit
-wavtsplot(LC1, iunit = 1)
+wavtsplot(LC = LC1, iunit = 1)
 
 #   +-----------------------------+
 #   | DIRECTIONAL WAVE SIMULATION |
@@ -117,9 +117,9 @@ wavtsplot(LC1, iunit = 1)
 # Congratulations! Your task has been completed successfully.
 #
 # Run Time Summary:
-# Run time for obtaining wave properties for each wave component from a directional wave energy spectrum is  0.00821209 sec.
-# Run time for calculating irregular waves time series by linear superposition of all regular wave components is  0.915555 sec.
-# Total run time for irregular wave simulation from a directional wave energy spectrum is  0.9237671 sec.
+# Run time for obtaining wave properties for each wave component from a directional wave energy spectrum is  0.004212856 sec.
+# Run time for calculating irregular waves time series by linear superposition of all regular wave components is  1.53721 sec.
+# Total run time for irregular wave simulation from a directional wave energy spectrum is  1.541423 sec.
 #
 # Thank you for using DWS R package! See you next time!
 # -------------------------------------------------------
@@ -132,11 +132,11 @@ microbenchmark(
   times = 5
 )
 
-# Unit: milliseconds
-#                                                                                                                                 expr      min       lq     mean   median       uq      max   neval
-# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200) 894.1829 969.2698 1021.877 985.1755 1055.626 1205.131       5
+# Unit: seconds
+#                                                                                                                                 expr      min       lq     mean   median       uq      max neval
+# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200) 1.542247 1.567411  1.63682 1.673597 1.676939 1.723905     5
 #
-# The median run time is: 985.1755 milliseconds
+# The median run time is: 1.673597 seconds
 
 
 
@@ -181,16 +181,15 @@ wavtsplot(LC2, iunit = 1)
 # Initializing the clusters with specified number of processors:  11
 # Parallel simulations start...
 # Calculating irregular waves time series by linear superposition of all regular wave components...
-# Retrieving data from parallel simulation output...
 # Parallel simulations completed.
 # Stop the clusters after the parallel simulations.
 #
 # Congratulations! Your task has been completed successfully.
 #
 # Run Time Summary:
-# Run time for obtaining wave properties for each wave component from a directional wave energy spectrum is  0.009123087 sec.
-# Run time for calculating irregular waves time series by linear superposition of all regular wave components is  17.09144 sec.
-# Total run time for irregular wave simulation from a directional wave energy spectrum is  17.10056 sec.
+# Run time for obtaining wave properties for each wave component from a directional wave energy spectrum is  0.006484985 sec.
+# Run time for calculating irregular waves time series by linear superposition of all regular wave components is  5.261965 sec.
+# Total run time for irregular wave simulation from a directional wave energy spectrum is  5.26845 sec.
 #
 # Thank you for using DWS R package! See you next time!
 # -------------------------------------------------------
@@ -204,10 +203,10 @@ microbenchmark(
 )
 
 # Unit: seconds
-#                                                                                                                                 expr      min       lq     mean   median       uq      max   neval
-# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200) 15.67168 15.84303 15.92654 15.89403 15.89523 16.32876       5
+#                                                                                                                                 expr      min       lq     mean   median       uq      max neval
+# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200) 5.016533 5.104629 5.101333 5.109457 5.121715 5.154333     5
 #
-# The median run time is: 15.89403 seconds
+# The median run time is: 5.109457 seconds
 
 
 
@@ -267,9 +266,9 @@ wavtsplot(LC3, iunit = 1)
 # Congratulations! Your task has been completed successfully.
 #
 # Run Time Summary:
-# Run time for obtaining wave properties for each wave component from a directional wave energy spectrum is  0.2711432 min.
-# Run time for calculating irregular waves time series by linear superposition of all regular wave components is  8.839503 min.
-# Total run time for irregular wave simulation from a directional wave energy spectrum is  8.844022 min.
+# Run time for obtaining wave properties for each wave component from a directional wave energy spectrum is  0.01780891 min.
+# Run time for calculating irregular waves time series by linear superposition of all regular wave components is  24.44506 min.
+# Total run time for irregular wave simulation from a directional wave energy spectrum is  24.44536 min.
 #
 # Thank you for using DWS R package! See you next time!
 # -------------------------------------------------------
@@ -284,9 +283,9 @@ microbenchmark(
 
 # Unit: seconds
 #                                                                                                                                 expr      min       lq     mean   median       uq      max neval
-# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200) 6577.701 6600.282 6636.202 6612.139 6631.342 6759.545     5
+# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200) 1265.799 1266.099 1326.751 1266.786 1269.926 1565.147     5
 #
-# The median run time is: 6612.139 seconds
+# The median run time is: 1266.786 seconds
 
 
 ###########################################################################
@@ -330,16 +329,15 @@ wavtsplot(LC4, iunit = 1)
 # Initializing the clusters with specified number of processors:  11
 # Parallel simulations start...
 # Calculating irregular waves time series by linear superposition of all regular wave components...
-# Retrieving data from parallel simulation output...
 # Parallel simulations completed.
 # Stop the clusters after the parallel simulations.
 #
 # Congratulations! Your task has been completed successfully.
 #
 # Run Time Summary:
-# Run time for obtaining wave properties for each wave component from a directional wave energy spectrum is  0.0192399 min.
-# Run time for calculating irregular waves time series by linear superposition of all regular wave components is  2.224801 min.
-# Total run time for irregular wave simulation from a directional wave energy spectrum is  2.224807 min.
+# Run time for obtaining wave properties for each wave component from a directional wave energy spectrum is  0.01335406 min.
+# Run time for calculating irregular waves time series by linear superposition of all regular wave components is  15.35305 min.
+# Total run time for irregular wave simulation from a directional wave energy spectrum is  15.35327 min.
 #
 # Thank you for using DWS R package! See you next time!
 # -------------------------------------------------------
@@ -354,6 +352,6 @@ microbenchmark(
 
 # Unit: seconds
 #                                                                                                                                 expr      min       lq     mean   median       uq      max neval
-# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200) 471.8445 476.9018 479.5849 478.8434 480.3728 489.9622     5
+# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200)  904.6454 911.135 915.4537 919.4522 919.5371 922.4989     5
 #
-# The median run time is: 478.8434 seconds
+# The median run time is: 919.4522 seconds

@@ -133,11 +133,11 @@ microbenchmark(
   times = 5
 )
 
-# Unit: milliseconds
-#                                                                                                                                 expr      min       lq     mean   median       uq      max   neval
-# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200) 894.1829 969.2698 1021.877 985.1755 1055.626 1205.131       5
+# Unit: seconds
+#                                                                                                                                 expr      min       lq     mean   median       uq      max neval
+# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200) 1.542247 1.567411  1.63682 1.673597 1.676939 1.723905     5
 #
-# The median run time is: 985.1755 milliseconds
+# The median run time is: 1.673597 seconds
 ```
 
 Step 5: Parallel simulations for small workloads:
@@ -167,15 +167,15 @@ microbenchmark(
 )
 
 # Unit: seconds
-#                                                                                                                                 expr      min       lq     mean   median       uq      max   neval
-# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200) 15.67168 15.84303 15.92654 15.89403 15.89523 16.32876       5
+#                                                                                                                                 expr      min       lq     mean   median       uq      max neval
+# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200) 5.016533 5.104629 5.101333 5.109457 5.121715 5.154333     5
 #
-# The median run time is: 15.89403 seconds
+# The median run time is: 5.109457 seconds
 ```
 
 <img src="example/Tsplot_LC1&2.jpeg" width="100%" />
 
-Comparing the run times betweens the Load Case 1 and 2, we have significant increase of run times for the parallel simulations due to the extra time to setup the parallel computing. 
+Comparing the run times betweens the Load Case 1 and 2, we have a significant increase of run times for the parallel simulations due to the extra time to setup the parallel computing. 
 Therefore, the parallel algorithm is NOT preferred for small workloads.
 
 Step 6: Sequential simulations for large workloads:
@@ -217,9 +217,9 @@ microbenchmark(
 
 # Unit: seconds
 #                                                                                                                                 expr      min       lq     mean   median       uq      max neval
-# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200) 6577.701 6600.282 6636.202 6612.139 6631.342 6759.545     5
+# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200) 1265.799 1266.099 1326.751 1266.786 1269.926 1565.147     5
 #
-# The median run time is: 6612.139 seconds
+# The median run time is: 1266.786 seconds
 ```
 
 Step 7: Parallel simulations for large workloads:
@@ -250,14 +250,14 @@ microbenchmark(
 
 # Unit: seconds
 #                                                                                                                                 expr      min       lq     mean   median       uq      max neval
-# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200) 471.8445 476.9018 479.5849 478.8434 480.3728 489.9622     5
+# DWS(h, xyz, t, n, m, freq, kata, spevar, dfreq, dkata, iunit, imodel, itheory, ialgorithm, iseed = iseed + 1, tol = 1e-05, no = 200)  904.6454 911.135 915.4537 919.4522 919.5371 922.4989     5
 #
-# The median run time is: 478.8434 seconds
+# The median run time is: 919.4522 seconds
 ```
 
 <img src="example/Tsplot_LC3&4.jpeg" width="100%" />
 
-Comparing the run times betweens the Load Case 3 and 4, we have significant decrease of run times for the parallel simulations due to the time saving from the parallel computing. 
+Comparing the run times betweens the Load Case 3 and 4, we have a decrease of run times for the parallel simulations due to the time saving from the parallel computing. 
 Therefore, the parallel algorithm is preferred for large workloads.
 
 ## Acknowledgements

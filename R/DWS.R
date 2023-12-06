@@ -25,7 +25,7 @@
 #' @param tol (Optional, default tol = 1.0e-5) Acceptance tolerance of convergence test for Newton-Raphson Method.
 #' @param no (Optional, default no = 200) Maximum number of iteration for Newton-Raphson Method.
 #'
-#' @return A time series of total irregular wave potential, total irregular wave horizontal X-velocity, total irregular wave horizontal Y-velocity, total irregular wave horizontal Z-velocity, total irregular wave horizontal X-acceleration, total irregular wave horizontal Y-acceleration, total irregular wave vertical Z-acceleration, and total irregular wave dynamic pressure at different locations (x, y, z) listed in xyz matrix.
+#' @return A list containing locations, time series, and output from wavsimu containing time series of total irregular wave potential, total irregular wave horizontal X-velocity, total irregular wave horizontal Y-velocity, total irregular wave horizontal Z-velocity, total irregular wave horizontal X-acceleration, total irregular wave horizontal Y-acceleration, total irregular wave vertical Z-acceleration, and total irregular wave dynamic pressure at different locations (x, y, z) listed in xyz matrix.
 #' @import foreach
 #' @import doParallel
 #' @export
@@ -94,16 +94,16 @@ DWS <- function(h, xyz, t, n, m, freq, kata, spevar, dfreq = NULL, dkata = NULL,
   nxyz <- nrow(xyz)
   nt <- length(t)
 
-  # Initialization of matrix
-  eta <- matrix(NA, nt, nxyz)
-  phi <- matrix(NA, nt, nxyz)
-  u <- matrix(NA, nt, nxyz)
-  v <- matrix(NA, nt, nxyz)
-  w <- matrix(NA, nt, nxyz)
-  udot <- matrix(NA, nt, nxyz)
-  vdot <- matrix(NA, nt, nxyz)
-  wdot <- matrix(NA, nt, nxyz)
-  p <- matrix(NA, nt, nxyz)
+  # # Initialization of matrix
+  # eta <- matrix(NA, nt, nxyz)
+  # phi <- matrix(NA, nt, nxyz)
+  # u <- matrix(NA, nt, nxyz)
+  # v <- matrix(NA, nt, nxyz)
+  # w <- matrix(NA, nt, nxyz)
+  # udot <- matrix(NA, nt, nxyz)
+  # vdot <- matrix(NA, nt, nxyz)
+  # wdot <- matrix(NA, nt, nxyz)
+  # p <- matrix(NA, nt, nxyz)
 
   # Obtain wave properties, such as wave amplitude, wave number, wave circular frequency, wave direction,
   # and wave initial random phase for each wave component from a directional wave energy spectrum
@@ -147,24 +147,25 @@ DWS <- function(h, xyz, t, n, m, freq, kata, spevar, dfreq = NULL, dkata = NULL,
     cat("Sequential Algorithm is chosen: ialgorithm == 1\n")
     cat("Sequential simulation starts.\n")
     cat("Calculating irregular waves time series by linear superposition of all regular wave components...\n")
-    for (j in 1:nxyz) {
+    # for (j in 1:nxyz) {
+    output <- foreach (j = 1:nxyz, .combine = 'list', .multicombine = TRUE, .export=c("wavsimu")) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE, .export=c("wavsimu")) %do% {
       # Obtain (X, Y, Z) coordinates for each location in matrix xyz
       # x <- xyz[j, 1]
       # y <- xyz[j, 2]
       # z <- xyz[j, 3]
-      for (i in 1:nt) {
+      # for (i in 1:nt) {
         # For each time instance, calculate irregular wave by linear superposition of all regular wave components
         irregwav <- wavsimu(h, g, rho, xyz[j, 1], xyz[j, 2], xyz[j, 3], t[i], amp, fk, fsigma, fkata, beta, itheory)
-        eta[i, j] <- irregwav$eta
-        phi[i, j] <- irregwav$phi
-        u[i, j] <- irregwav$u
-        v[i, j] <- irregwav$v
-        w[i, j] <- irregwav$w
-        udot[i, j] <- irregwav$udot
-        vdot[i, j] <- irregwav$vdot
-        wdot[i, j] <- irregwav$wdot
-        p[i, j] <- irregwav$p
-      }
+        # eta[i, j] <- irregwav$eta
+        # phi[i, j] <- irregwav$phi
+        # u[i, j] <- irregwav$u
+        # v[i, j] <- irregwav$v
+        # w[i, j] <- irregwav$w
+        # udot[i, j] <- irregwav$udot
+        # vdot[i, j] <- irregwav$vdot
+        # wdot[i, j] <- irregwav$wdot
+        # p[i, j] <- irregwav$p
+      # }
     }
     cat("Sequential simulation completed.\n")
   } else if (ialgorithm == 2) {
@@ -190,16 +191,17 @@ DWS <- function(h, xyz, t, n, m, freq, kata, spevar, dfreq = NULL, dkata = NULL,
       # for (i in 1:nt) {
       # output1 <- foreach (i = 1:nt, .combine = rbind, .multicombine = TRUE, ) %do% {
       # for (i in 1:nt) {
-      irregwav <- wavsimu(h, g, rho, xyz[j, 1], xyz[j, 2], xyz[j, 3], t[i], amp, fk, fsigma, fkata, beta, itheory)
-      # eta[i, 1] <- irregwav$eta
-      # phi[i, 1] <- irregwav$phi
-      # u[i, 1] <- irregwav$u
-      # v[i, 1] <- irregwav$v
-      # w[i, 1] <- irregwav$w
-      # udot[i, 1] <- irregwav$udot
-      # vdot[i, 1] <- irregwav$vdot
-      # wdot[i, 1] <- irregwav$wdot
-      # p[i, 1] <- irregwav$p
+        irregwav <- wavsimu(h, g, rho, xyz[j, 1], xyz[j, 2], xyz[j, 3], t[i], amp, fk, fsigma, fkata, beta, itheory)
+        # eta[i, 1] <- irregwav$eta
+        # phi[i, 1] <- irregwav$phi
+        # u[i, 1] <- irregwav$u
+        # v[i, 1] <- irregwav$v
+        # w[i, 1] <- irregwav$w
+        # udot[i, 1] <- irregwav$udot
+        # vdot[i, 1] <- irregwav$vdot
+        # wdot[i, 1] <- irregwav$wdot
+        # p[i, 1] <- irregwav$p
+      # }
     }
     # # Retrieve data from parallel simulation output sequentially
     # for (j in 1:nxyz) {
@@ -216,34 +218,34 @@ DWS <- function(h, xyz, t, n, m, freq, kata, spevar, dfreq = NULL, dkata = NULL,
     #   }
     # }
     # Retrieve data from parallel simulation output in parallel
-    cat("Retrieving data from parallel simulation output...\n")
-    eta <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
-      output[[j]][[i, 1]]
-    }
-    phi <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
-      output[[j]][[i, 2]]
-    }
-    u <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
-      output[[j]][[i, 3]]
-    }
-    v <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
-      output[[j]][[i, 4]]
-    }
-    w <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
-      output[[j]][[i, 5]]
-    }
-    udot <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
-      output[[j]][[i, 6]]
-    }
-    vdot <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
-      output[[j]][[i, 7]]
-    }
-    wdot <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
-      output[[j]][[i, 8]]
-    }
-    p <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
-      output[[j]][[i, 9]]
-    }
+    # cat("Retrieving data from parallel simulation output...\n")
+    # eta <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
+    #   output[[j]][[i, 1]]
+    # }
+    # phi <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
+    #   output[[j]][[i, 2]]
+    # }
+    # u <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
+    #   output[[j]][[i, 3]]
+    # }
+    # v <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
+    #   output[[j]][[i, 4]]
+    # }
+    # w <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
+    #   output[[j]][[i, 5]]
+    # }
+    # udot <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
+    #   output[[j]][[i, 6]]
+    # }
+    # vdot <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
+    #   output[[j]][[i, 7]]
+    # }
+    # wdot <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
+    #   output[[j]][[i, 8]]
+    # }
+    # p <- foreach (j = 1:nxyz, .combine = 'cbind', .multicombine = TRUE) %:% foreach (i = 1:nt, .combine = 'rbind', .multicombine = TRUE) %dopar% {
+    #   output[[j]][[i, 9]]
+    # }
     cat("Parallel simulations completed.\n")
 
     # Stop the clusters after the parallel simulations
@@ -276,5 +278,6 @@ DWS <- function(h, xyz, t, n, m, freq, kata, spevar, dfreq = NULL, dkata = NULL,
   # total irregular wave horizontal Y-velocity, total irregular wave horizontal Z-velocity,
   # total irregular wave horizontal X-acceleration, total irregular wave horizontal Y-acceleration
   # total irregular wave vertical Z-acceleration, and total irregular wave dynamic pressure at different locations (x, y, z) listed in xyz matrix.
-  return(list(xyz = xyz, t = t, eta = eta, phi = phi, u = u, v = v, w = w, udot = udot, vdot = vdot, wdot = wdot, p = p))
+  # return(list(xyz = xyz, t = t, eta = eta, phi = phi, u = u, v = v, w = w, udot = udot, vdot = vdot, wdot = wdot, p = p))
+  return(list(xyz = xyz, t = t, output = output))
 }
