@@ -1,7 +1,7 @@
 Package: DWS
 Type: Package
 Title: DWS (Directional Wave Simulation)
-Version: 0.2.0
+Version: 0.3.0
 Author: Liqing Huang <hlq1983@tamu.edu>
 Maintainer: Liqing Huang <hlq1983@tamu.edu>
 Description: DWS (Directional Wave Simulation) numerically simulates the time series of the irregular wave at different locations in the ocean based upon a directional wave energy spectrum. Based upon the input of a 2 dimensional table with spectral variance versus frequencies and directions and linear wave theory, DWS calculates the time histories of the surface elevation, the horizontal velocity, the vertical velocity, and the dynamic pressure at different locations (x, y, z) at a time series t.
@@ -22,3 +22,7 @@ LazyData: true
 RoxygenNote: 7.2.3
 Depends: 
     R (>= 2.10)
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

@@ -1,0 +1,375 @@
+---
+title: "Introduction to DWS"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to DWS}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(DWS)
+```
+
+## Introduction
+
+The *R* Package *DWS (Directional Wave Simulation)* numerically simulates the time series of the irregular waves at different locations in the ocean based upon a directional wave energy spectrum. Based upon the input of a 2-dimensional table with energy spectral variance versus wave frequencies and wave direction angles and linear wave theory, *DWS* calculates the time histories of the surface elevation, the horizontal velocity, the vertical velocity, the horizontal acceleration, the vertical acceleration, and the dynamic pressure at different locations $(x, y, z)$ coordinates.
+
+In calculating the irregular waves, two different models for the wave redirection could be chosen to combine a variety of harmonic wave components, one is *Single Summation Model (SSM)* and the other is *Double Summation Model (DSM)*. For SSM, wave components of different frequencies travel in different directions, but at the same frequency, they travel in the same direction. For DSM, at the same frequency, wave components travel in different directions (energy spreading). 
+
+In obtaining the harmonic wave components, the *Linear Wave Theory (LWT)* is employed to calculating the properties of the regular waves. As we know, the linear wave theory can only be applied up to the still water level. However, for structures at the free surface, the waves above the *Still Water Level (SWL)* may have a large influence on the response of the structure and may not be ignored. If linear theory is used, the theory is modified to account for the *Free Surface Effect*. There are several possible modifications that have been proposed, such as *First-Order Stretching*, *Linear Extrapolation*, and *Second Order Stretching*. *Wheeler’s stretching (1970)* is the most used *First-Order Stretching* technique in the offshore structure design. Thus, only Linear Wave Theory without stretching and with Wheeler’s stretching are provided in the *R* Package *DWS*.
+
+## Workflow and Theoretical Formulations
+
+The detailed workflow and theoretical formulations for the *R* Package *DWS* are presented as follows:
+
+### 1. Read in the parameters and data for the directional wave energy spectrum from the input file ‘spectrum.txt’ or alternatively lazy load 'Katrina' data:
+
+           h:  Water depth of a specific area where the directional wave energy spectrum is obtained.
+         xyz:  (x, y, z) Coordinate Matrix for Locations of Interest, m.
+           t:  Time Series, sec.
+           n:  Number of frequencies in the directional wave energy spectrum.
+           m:  Number of directions in the directional wave energy spectrum.
+     freq(i):  Frequency Vector σ_i in the directional wave energy spectrum, Hz.
+     kata(j):  Direction Vector χ_j in the directional wave energy spectrum, deg.
+spevar(i, j):  Spectral Variance in the directional wave energy spectrum，m^2/Hz/deg, defined as
+
+$$
+spevar(i,j) = S(\sigma_i,\chi_j) \cdot \Delta \sigma_i \cdot  \Delta \chi_j
+$$
+    
+    dfreq(i):  Frequency Bend Width Δσ_i in the directional wave energy spectrum
+    dkata(j):  Direction Bend Width Δχ_j in the directional wave energy spectrum
+       iunit:	 Identifier for Unit System: 1 for SI Unit, 2 for English Unit.
+
+### 2. Convert the units for the frequencies and the directions
+
+*Wave Frequency*: From Natural Frequency (Hz) to Circular Frequency (rad/s)
+
+$$
+f_n (Hz) \Rightarrow \sigma_n = 2 \pi f_n \Rightarrow  \sigma_n (rad/s)
+$$
+*Wave Direction*: From (deg) to (rad)
+
+$$
+\chi_m (deg) \Rightarrow if \ \chi_m > 180 ^{\circ},\ then \ \chi_m = \chi_m - 360 ^{\circ} \Rightarrow \chi_m = \chi_m \cdot \pi /180^{\circ} \Rightarrow \chi_m (rad)
+$$
+
+### 3. Calculate Wave Number $k_n$ in Function wavnum 
+
+      iseed:	Initial large, odd integer for generating randomly selected initial phases.
+        tol:	Acceptance tolerance of convergence test for Newton-Raphson Method in calculating Wave Number k_n.
+         no:	Maximum number of iterations for Newton-Raphson Method in calculating Wave Number k_n.
+
+
+
+#### Theoretical Formulations for Newton-Raphson Method:
+##### Linear Wave Dispersion Relation:
+
+$$
+\sigma^2 = g k \tanh  k h
+$$
+
+$$
+f(k) = \sigma^2 - g k \tanh k h
+$$
+
+$$
+{f}'(k) = - g \left (\tanh k h +  \frac{k h} {{\cosh}^2 k h }  \right )
+$$
+
+$$
+k_i = k_{i-1} - \frac {f(k_{i-1})} {{f}'(k_{i-1})}
+$$
+
+##### Initial guess of $k_0$:
+
+Assume deep water, we have:
+
+$$
+\sigma^2 = g k \Rightarrow k = \frac {\sigma^2} {g} \Rightarrow L = \frac {2 \pi} {k} = \frac{2 \pi g}{\sigma^2}
+$$
+
+If $h / L ≥ 1/2$, Deep water, $k = k_0$;
+
+Else if $h / L ≤ 1/20$, Shallow water, $k_0 = \sqrt{\sigma^2 / g h}$;
+
+Else $1/20 < h / L < 1/2$, Intermediate water, $k_0 = 0.2$.
+
+##### Loop until the convergence criterion is met:
+
+If $k_i - k_{i-1} < tol$, then returns: $k_n = k_i$,  where $tol = 10^{-5}$ is tolerance.
+
+If $i > no$, then returns message: Newton-Raphson Method failed after $no$ iterations, where no = 200 is maximum iteration number.
+
+### 4. Directional Waves Simulations: 
+
+     imodel:  Identifier for the directional wave summation model, 1 for Single Summation Model, 2   for Double Summation Model.
+    itheory:  Identifier for dealing with the Free Surface Effect, 1 for Linear Wave Theory w/o stretching, 2 for Linear Wave Theory with Wheeler's Stretching.
+    ialgorithm:  Identifier for choosing irregular wave simulation algorithm: 1 for Sequential Algorithm, 2 for Parallel Algorithm.
+
+#### Double Summation Model:
+
+##### Linear Wave Theory: 
+
+Surface elevation: 
+
+$$
+\eta = \sum_{n = 1}^N \sum_{m = 1}^M a_{nm} \cos \theta_{nm}
+$$
+
+Velocity potential: 
+$$
+\Phi = \sum_{n=1}^N \sum_{m=1}^M \frac {a_{nm} g} {\sigma_n} \frac {\cosh [ k_n (z + h)]} {\cosh k_n h} \sin \theta_{nm}
+$$
+Horizontal X-velocity: 
+
+$$
+u = \sum_{n=1}^N \sum_{m=1}^M a_{nm} \sigma_n  \frac {\cosh [ k_n (z + h)]} {\sinh k_n h} \cos \theta_{nm} \cos \chi_{nm}
+$$
+
+Horizontal Y-velocity: 
+
+$$
+v = \sum_{n=1}^N \sum_{m=1}^M a_{nm} \sigma_n  \frac {\cosh [ k_n (z + h)]} {\sinh k_n h} \cos \theta_{nm} \sin \chi_{nm}
+$$
+
+Vertical velocity: 
+
+$$
+w = \sum_{n=1}^N \sum_{m=1}^M a_{nm} \sigma_n  \frac {\sinh [ k_n (z + h)]} {\sinh k_n h} \sin \theta_{nm}
+$$
+
+Horizontal X-acceleration: 
+
+$$
+\dot{u} = \sum_{n=1}^N \sum_{m=1}^M a_{nm} \sigma^2_n  \frac {\cosh [ k_n (z + h)]} {\sinh k_n h} \sin \theta_{nm} \cos \chi_{nm}
+$$
+
+Horizontal Y-acceleration: 
+
+$$
+\dot{v} = \sum_{n=1}^N \sum_{m=1}^M a_{nm} \sigma^2_n  \frac {\cosh [ k_n (z + h)]} {\sinh k_n h} \sin \theta_{nm} \sin \chi_{nm}
+$$
+
+Vertical acceleration: 
+
+$$
+\dot{w} = - \sum_{n=1}^N \sum_{m=1}^M a_{nm} \sigma^2_n  \frac {\sinh [ k_n (z + h)]} {\sinh k_n h} \cos \theta_{nm}
+$$
+
+Dynamic pressure: 
+
+$$
+{p}' = \sum_{n=1}^N \sum_{m=1}^M \rho g a_{nm} \frac {\cosh [ k_n (z + h)]} {\cosh k_n h} \cos \theta_{nm}
+$$
+
+##### Linear Wave Theory with Wheeler’s Stretching Technique:
+
+Surface elevation: 
+
+$$
+\eta = \sum_{n = 1}^N \sum_{m = 1}^M a_{nm} \cos \theta_{nm}
+$$
+
+Velocity potential: 
+$$
+\Phi = \sum_{n=1}^N \sum_{m=1}^M \frac {a_{nm} g} {\sigma_n} \frac {\cosh [ k_n (\frac {z + h}{1 + \eta / h})]} {\cosh k_n h} \sin \theta_{nm}
+$$
+Horizontal X-velocity: 
+
+$$
+u = \sum_{n=1}^N \sum_{m=1}^M a_{nm} \sigma_n  \frac {\cosh [ k_n (\frac {z + h}{1 + \eta / h})]} {\sinh k_n h} \cos \theta_{nm} \cos \chi_{nm}
+$$
+
+Horizontal Y-velocity: 
+
+$$
+v = \sum_{n=1}^N \sum_{m=1}^M a_{nm} \sigma_n  \frac {\cosh [ k_n (\frac {z + h}{1 + \eta / h})]} {\sinh k_n h} \cos \theta_{nm} \sin \chi_{nm}
+$$
+
+Vertical velocity: 
+
+$$
+w = \sum_{n=1}^N \sum_{m=1}^M a_{nm} \sigma_n  \frac {\sinh [ k_n (\frac {z + h}{1 + \eta / h})]} {\sinh k_n h} \sin \theta_{nm}
+$$
+
+Horizontal X-acceleration: 
+
+$$
+\dot{u} = \sum_{n=1}^N \sum_{m=1}^M a_{nm} \sigma^2_n  \frac {\cosh [ k_n (\frac {z + h}{1 + \eta / h})]} {\sinh k_n h} \sin \theta_{nm} \cos \chi_{nm}
+$$
+
+Horizontal Y-acceleration: 
+
+$$
+\dot{v} = \sum_{n=1}^N \sum_{m=1}^M a_{nm} \sigma^2_n  \frac {\cosh [ k_n (\frac {z + h}{1 + \eta / h})]} {\sinh k_n h} \sin \theta_{nm} \sin \chi_{nm}
+$$
+
+Vertical acceleration: 
+
+$$
+\dot{w} = - \sum_{n=1}^N \sum_{m=1}^M a_{nm} \sigma^2_n  \frac {\sinh [ k_n (\frac {z + h}{1 + \eta / h})]} {\sinh k_n h} \cos \theta_{nm}
+$$
+
+Dynamic pressure: 
+
+$$
+{p}' = \sum_{n=1}^N \sum_{m=1}^M \rho g a_{nm} \frac {\cosh [ k_n (\frac {z + h}{1 + \eta / h})]} {\cosh k_n h} \cos \theta_{nm}
+$$
+
+where $a_{nm} = \sqrt{2S(\sigma_n,\ \chi_nm) \Delta \sigma_n \Delta \chi_{nm}}$, 
+
+$\theta_{nm} = k_n (\cos \chi_{nm} x + \sin \chi_{nm} y ) - \sigma_n t + \beta_{nm}$, 
+
+$\beta_{nm} \in [0, 2 \pi]$ is the randomly selected initial phase.
+
+#### Single Summation Model:
+
+Each frequency in the directional wave spectrum spreads uniformly into $m$ (number of directions) frequencies with the left and the right half frequency bands, while the directions remain unchanged.
+
+The new frequency spacing is:
+
+$$
+\Delta {\sigma_i}' = \left\{\begin{matrix} \frac{\sigma_2 - \sigma_1}{100000 m}
+\\ \frac{\sigma_{i + 1} - \sigma_{i - 1}}{200000 m}
+\\ \frac{\sigma_n - \sigma_{n-1}}{100000 m}
+\end{matrix}\right.
+$$
+
+The new frequency is:
+
+$$
+{\sigma_l}' = \sigma_i + \Delta {\sigma_i}'(j-1)
+$$
+
+$$
+spevar(l)= spevar(i,j)
+$$
+
+where $l = m \times (i - 1) + j$ and $L = M \times N$.
+
+##### Linear Wave Theory:
+
+Surface elevation: 
+
+$$
+\eta = \sum_{l = 1}^L a_{l} \cos \theta_{l}
+$$
+
+Velocity potential: 
+$$
+\Phi = \sum_{l=1}^L \frac {a_{l} g} {\sigma_l} \frac {\cosh [ k_l (z + h)]} {\cosh k_l h} \sin \theta_{l}
+$$
+Horizontal X-velocity: 
+
+$$
+u = \sum_{l=1}^L a_{l} \sigma_l  \frac {\cosh [ k_l (z + h)]} {\sinh k_l h} \cos \theta_{l} \cos \chi_{l}
+$$
+
+Horizontal Y-velocity: 
+
+$$
+v = \sum_{l=1}^L a_{l} \sigma_l  \frac {\cosh [ k_l (z + h)]} {\sinh k_l h} \cos \theta_{l} \sin \chi_{l}
+$$
+
+Vertical velocity: 
+
+$$
+w = \sum_{l=1}^L a_{l} \sigma_l  \frac {\sinh [ k_l (z + h)]} {\sinh k_l h} \sin \theta_{l}
+$$
+
+Horizontal X-acceleration: 
+
+$$
+\dot{u} = \sum_{l=1}^L a_{l} \sigma^2_l  \frac {\cosh [ k_l (z + h)]} {\sinh k_l h} \sin \theta_{l} \cos \chi_{l}
+$$
+
+Horizontal Y-acceleration: 
+
+$$
+\dot{v} = \sum_{l=1}^L a_{l} \sigma^2_l  \frac {\cosh [ k_l (z + h)]} {\sinh k_l h} \sin \theta_{l} \sin \chi_{l}
+$$
+
+Vertical acceleration: 
+
+$$
+\dot{w} = - \sum_{l=1}^L a_{l} \sigma^2_l  \frac {\sinh [ k_l (z + h)]} {\sinh k_l h} \cos \theta_{l}
+$$
+
+Dynamic pressure: 
+
+$$
+{p}' = \sum_{l=1}^L \rho g a_{l} \frac {\cosh [ k_l (z + h)]} {\cosh k_l h} \cos \theta_{l}
+$$
+
+#####	Linear Wave Theory with	Wheeler’s Stretching Technique
+
+Surface elevation: 
+
+$$
+\eta = \sum_{l = 1}^L a_{l} \cos \theta_{l}
+$$
+
+Velocity potential: 
+$$
+\Phi = \sum_{l=1}^L \frac {a_{l} g} {\sigma_l} \frac {\cosh [ k_l (\frac {z + h}{1 + \eta / h})]} {\cosh k_l h} \sin \theta_{l}
+$$
+Horizontal X-velocity: 
+
+$$
+u = \sum_{l=1}^L a_{l} \sigma_l  \frac {\cosh [ k_l (\frac {z + h}{1 + \eta / h})]} {\sinh k_l h} \cos \theta_{l} \cos \chi_{l}
+$$
+
+Horizontal Y-velocity: 
+
+$$
+v = \sum_{l=1}^L a_{l} \sigma_l  \frac {\cosh [ k_l (\frac {z + h}{1 + \eta / h})]} {\sinh k_l h} \cos \theta_{l} \sin \chi_{l}
+$$
+
+Vertical velocity: 
+
+$$
+w = \sum_{l=1}^L a_{l} \sigma_l  \frac {\sinh [ k_l (\frac {z + h}{1 + \eta / h})]} {\sinh k_l h} \sin \theta_{l}
+$$
+
+Horizontal X-acceleration: 
+
+$$
+\dot{u} = \sum_{l=1}^L a_{l} \sigma^2_l  \frac {\cosh [ k_l (\frac {z + h}{1 + \eta / h})]} {\sinh k_l h} \sin \theta_{l} \cos \chi_{l}
+$$
+
+Horizontal Y-acceleration: 
+
+$$
+\dot{v} = \sum_{l=1}^L a_{l} \sigma^2_l  \frac {\cosh [ k_l (\frac {z + h}{1 + \eta / h})]} {\sinh k_l h} \sin \theta_{l} \sin \chi_{l}
+$$
+
+Vertical acceleration: 
+
+$$
+\dot{w} = - \sum_{l=1}^L a_{l} \sigma^2_l  \frac {\sinh [ k_l (\frac {z + h}{1 + \eta / h})]} {\sinh k_l h} \cos \theta_{l}
+$$
+
+Dynamic pressure: 
+
+$$
+{p}' = \sum_{l=1}^L \rho g a_{l} \frac {\cosh [ k_l (\frac {z + h}{1 + \eta / h})]} {\cosh k_l h} \cos \theta_{l}
+$$
+
+where $a_{l} = \sqrt{2S(\sigma_l,\ \chi_l) \Delta \sigma_l \Delta \chi_{l}}$, 
+
+$\theta_{l} = k_l (\cos \chi_{l} x + \sin \chi_{l} y ) - \sigma_l t + \beta_{l}$, 
+
+$\beta_{l} \in [0, 2 \pi]$ is the randomly selected initial phase.
+
+### 5. Return time history of surface elevation $\eta$ (m), velocity potential $\Phi$ (m^2/s), horizontal velocity u (m/s), vertical velocity v (m/s), horizontal acceleration $\dot{u}$ (m/s^2), vertical acceleration $\dot{u}$ (m/s^2) and dynamic pressure ${p}’ (Pa) at different locations to the output list.
+
+### 6. Plot time history of surface elevation $\eta$ (m), velocity potential $\Phi$ (m^2/s), horizontal velocity u (m/s), vertical velocity v (m/s), horizontal acceleration $\dot{u}$ (m/s^2), vertical acceleration $\dot{u}$ (m/s^2) and dynamic pressure ${p}’ (Pa) at different locations to the window with 3 X 3 matrix.
